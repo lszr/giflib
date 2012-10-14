@@ -40,9 +40,8 @@ host_triplet = @host@
 noinst_PROGRAMS = gifbg$(EXEEXT) gifcolor$(EXEEXT) giffilter$(EXEEXT) \
 	gifhisto$(EXEEXT) gifsponge$(EXEEXT) gifwedge$(EXEEXT)
 bin_PROGRAMS = gif2raw$(EXEEXT) gif2rgb$(EXEEXT) gifbuild$(EXEEXT) \
-	gifecho$(EXEEXT) giffix$(EXEEXT) gifinter$(EXEEXT) \
-	gifinto$(EXEEXT) giftext$(EXEEXT) giftool$(EXEEXT) \
-	@COMPILABLE_EXTRAS@ $(am__empty)
+	gifecho$(EXEEXT) giffix$(EXEEXT) gifinto$(EXEEXT) \
+	giftext$(EXEEXT) giftool$(EXEEXT) @COMPILABLE_EXTRAS@
 EXTRA_PROGRAMS = gifclrmp$(EXEEXT)
 subdir = util
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
@@ -101,10 +100,6 @@ am_gifhisto_OBJECTS = gifhisto.$(OBJEXT)
 gifhisto_OBJECTS = $(am_gifhisto_OBJECTS)
 gifhisto_LDADD = $(LDADD)
 gifhisto_DEPENDENCIES = libgetarg.a ../lib/libgif.la
-am_gifinter_OBJECTS = gifinter.$(OBJEXT)
-gifinter_OBJECTS = $(am_gifinter_OBJECTS)
-gifinter_LDADD = $(LDADD)
-gifinter_DEPENDENCIES = libgetarg.a ../lib/libgif.la
 am_gifinto_OBJECTS = gifinto.$(OBJEXT)
 gifinto_OBJECTS = $(am_gifinto_OBJECTS)
 gifinto_LDADD = $(LDADD)
@@ -141,15 +136,15 @@ LINK = $(LIBTOOL) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) \
 SOURCES = $(libgetarg_a_SOURCES) $(gif2raw_SOURCES) $(gif2rgb_SOURCES) \
 	$(gifbg_SOURCES) $(gifbuild_SOURCES) $(gifclrmp_SOURCES) \
 	$(gifcolor_SOURCES) $(gifecho_SOURCES) $(giffilter_SOURCES) \
-	$(giffix_SOURCES) $(gifhisto_SOURCES) $(gifinter_SOURCES) \
-	$(gifinto_SOURCES) $(gifsponge_SOURCES) $(giftext_SOURCES) \
-	$(giftool_SOURCES) $(gifwedge_SOURCES)
+	$(giffix_SOURCES) $(gifhisto_SOURCES) $(gifinto_SOURCES) \
+	$(gifsponge_SOURCES) $(giftext_SOURCES) $(giftool_SOURCES) \
+	$(gifwedge_SOURCES)
 DIST_SOURCES = $(libgetarg_a_SOURCES) $(gif2raw_SOURCES) \
 	$(gif2rgb_SOURCES) $(gifbg_SOURCES) $(gifbuild_SOURCES) \
 	$(gifclrmp_SOURCES) $(gifcolor_SOURCES) $(gifecho_SOURCES) \
 	$(giffilter_SOURCES) $(giffix_SOURCES) $(gifhisto_SOURCES) \
-	$(gifinter_SOURCES) $(gifinto_SOURCES) $(gifsponge_SOURCES) \
-	$(giftext_SOURCES) $(giftool_SOURCES) $(gifwedge_SOURCES)
+	$(gifinto_SOURCES) $(gifsponge_SOURCES) $(giftext_SOURCES) \
+	$(giftool_SOURCES) $(gifwedge_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
@@ -288,7 +283,6 @@ gifecho_SOURCES = gifecho.c
 giffilter_SOURCES = giffilter.c
 giffix_SOURCES = giffix.c
 gifhisto_SOURCES = gifhisto.c
-gifinter_SOURCES = gifinter.c
 gifinto_SOURCES = gifinto.c
 gifsponge_SOURCES = gifsponge.c
 giftext_SOURCES = giftext.c
@@ -417,9 +411,6 @@ giffix$(EXEEXT): $(giffix_OBJECTS) $(giffix_DEPENDENCIES) $(EXTRA_giffix_DEPENDE
 gifhisto$(EXEEXT): $(gifhisto_OBJECTS) $(gifhisto_DEPENDENCIES) $(EXTRA_gifhisto_DEPENDENCIES) 
 	@rm -f gifhisto$(EXEEXT)
 	$(LINK) $(gifhisto_OBJECTS) $(gifhisto_LDADD) $(LIBS)
-gifinter$(EXEEXT): $(gifinter_OBJECTS) $(gifinter_DEPENDENCIES) $(EXTRA_gifinter_DEPENDENCIES) 
-	@rm -f gifinter$(EXEEXT)
-	$(LINK) $(gifinter_OBJECTS) $(gifinter_LDADD) $(LIBS)
 gifinto$(EXEEXT): $(gifinto_OBJECTS) $(gifinto_DEPENDENCIES) $(EXTRA_gifinto_DEPENDENCIES) 
 	@rm -f gifinto$(EXEEXT)
 	$(LINK) $(gifinto_OBJECTS) $(gifinto_LDADD) $(LIBS)
@@ -453,7 +444,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/giffilter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/giffix.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gifhisto.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gifinter.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gifinto.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/gifsponge.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/giftext.Po@am__quote@

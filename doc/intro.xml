@@ -70,6 +70,12 @@ image input, and will print output image line number (counting down)
 when they dump output.  Utilities that only read or write always print
 in increasing order.</para>
 
+<!--
+Note: the giflib.1 man page is deliberately omitted from the following
+list of references. It's meant to be seen through man(1) only as part
+of a local installation of the tools.
+-->
+
 <sect2><title>Conversion Utilities</title>
 
 <variablelist>
@@ -125,12 +131,6 @@ in increasing order.</para>
 <term><ulink url="giffix.html">giffix</ulink></term>
 <listitem>
 <para>clumsily attempts to fix truncated GIF images</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term><ulink url="gifinter.html">gifinter</ulink></term>
-<listitem>
-<para>convert between interlaced and non interlaced images</para>
 </listitem>
 </varlistentry>
 </variablelist>

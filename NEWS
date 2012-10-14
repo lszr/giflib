@@ -1,11 +1,29 @@
 			GIFLIB NEWS
 
-Short-form news summary for shipper
- DGifSlurp()/EGifSpew() now handle interlacing and trailing extension blocks.
- New functions support reading and editing GIF89 graphics control blocks.
- The library is now purely reentrant and thread-safe.
- All names of exported functions now have a Gif, DGif, or EGif prefix.
- A new giftool utility supports scripted modification of GIF data fields.
+Short summary of recent news:
+ Added an EGifSetGifVersion() entry point.
+ This release will only be of interest to those using the low-level API.
+
+Version 5.0.1
+=============
+
+Documentation and polish
+------------------------
+* There is now an installable manual page for the GIFLIB utility kit.
+
+Retirements
+-----------
+* gifinter is gone.  Use convert -interlace from the ImageMagic suite.
+
+Code Fixes
+----------
+* In 5.0.0 the private gif89 bit wasn't being guaranteed cleared at
+  the beginning of EGifGetGifVersion(); this occasionally led to an
+  incorrect version prefix being issued dependent on the state of
+  malloced memory.
+* An EGifSetGifVersion() function taking a GifFile argument has been 
+  added for use with the low-level sequential API. This change requires
+  a bump of the library revision number.
 
 Version 5.0.0
 =============
