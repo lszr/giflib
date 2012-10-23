@@ -1,4 +1,9 @@
-SUBDIRS = lib util doc pic
+SUBDIRS = lib util pic
+
+# Avoid trouble if your system doesn't have xmlto.
+if BUILD_DOC
+SUBDIRS += doc
+endif
 
 EXTRA_DIST = Makefile.unx \
 	     autogen.sh \
@@ -30,8 +35,8 @@ SPLINT_SUPPRESSIONS = -boolops -nullret
 splint: 
 	splint +quiet +posixlib $(SPLINT_SUPPRESSIONS) lib/*.[ch]
 
-# release using the shipper tool
-release: dist
+# release using the shipper tool, if distcheck passes
+release: distcheck
 	cd doc; make website
 	shipper -u -m -t; make clean
 	rm -fr doc/staging

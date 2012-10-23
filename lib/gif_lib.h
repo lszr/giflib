@@ -13,7 +13,7 @@ extern "C" {
 
 #define GIFLIB_MAJOR 5
 #define GIFLIB_MINOR 0
-#define GIFLIB_RELEASE 1
+#define GIFLIB_RELEASE 2
 
 #define GIF_ERROR   0
 #define GIF_OK      1
@@ -152,7 +152,7 @@ int EGifPutImageDesc(GifFileType *GifFile,
                      const int GifWidth, const int GifHeight, 
 		     const bool GifInterlace,
                      const ColorMapObject *GifColorMap);
-int EGifSetGifVersion(GifFileType *GifFile, const bool gif89);
+void EGifSetGifVersion(GifFileType *GifFile, const bool gif89);
 int EGifPutLine(GifFileType *GifFile, GifPixelType *GifLine,
                 int GifLineLen);
 int EGifPutPixel(GifFileType *GifFile, const GifPixelType GifPixel);
