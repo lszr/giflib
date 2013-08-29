@@ -1,5 +1,8 @@
 SUBDIRS = lib util pic
 
+# Pacify autoreconf.  We don't actually use this.
+ACLOCAL_AMFLAGS = -I m4
+
 # Avoid trouble if your system doesn't have xmlto.
 if BUILD_DOC
 SUBDIRS += doc
@@ -38,5 +41,5 @@ splint:
 # release using the shipper tool, if distcheck passes
 release: distcheck
 	cd doc; make website
-	shipper -u -m -t; make clean
+	shipper -u -m -t; rm SHIPPER.*; make clean
 	rm -fr doc/staging
