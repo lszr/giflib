@@ -42,6 +42,28 @@ static char
 static int
     MinFileSize = DEFAULT_MIN_FILE_SIZE;
 
+#ifdef _WIN32
+#include <errno.h>
+#include <sys/stat.h>
+int
+mkstemp(char *tpl)
+{
+  int fd = -1;
+  char *p;
+  int e = errno;
+
+  errno = 0;
+  p = _mktemp(tpl);
+  if (*p && errno == 0)
+    {
+      errno = e;
+      fd = _open(p, _O_RDWR | _O_CREAT | _O_EXCL | _O_BINARY,
+		 _S_IREAD | _S_IWRITE);
+    }
+  return fd;
+}
+#endif
+
 /******************************************************************************
  This is simply: read until EOF, then close the output, test its length, and
  if non zero then rename it.
@@ -110,14 +132,18 @@ int main(int argc, char **argv)
     {
 	GIF_EXIT("Failed to open output.");
     }
-    Fout = fdopen(FD, "w"); /* returns a stream with FD */
+    Fout = fdopen(FD, "wb"); /* returns a stream with FD */
     if (Fout == NULL )
     {
 	GIF_EXIT("Failed to open output.");
     }
 
-    while (!feof(Fin)) {
-	if (putc(getc(Fin), Fout) == EOF)
+    while (1) {
+	int c = getc(Fin);
+
+	if (feof(Fin))
+	    break;
+	if (putc(c, Fout) == EOF)
 	    GIF_EXIT("Failed to write output.");
     }
 
