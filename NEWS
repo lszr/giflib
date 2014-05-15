@@ -1,7 +1,44 @@
 			GIFLIB NEWS
 
 Short summary of recent news:
-  Minor fix for rare memory leak. MinGW port fixes.
+  Minor API change to assist library wrappers in dynamic languages.
+  The gif2raw utility has been removed.
+  Various minor fix patches for unusual edge cases.
+
+Version 5.1.0
+=============
+
+Changes to the API require a library major-version bump.
+
+Code Fixes
+----------
+
+* A small change to the API: DGifClose() and EGifClose() now take a
+  pointer-to-int second argument (like the corresponding openers)
+  where a diagnostic code will be deposited when they return
+  GIF_ERROR.  This replaces the old behavior in which the GifFile
+  structure was left unfreed so the Error member in it could be filled
+  and remain available.  The change was was required because it's
+  not always possible to free the struct afterwards. Case in point is
+  a C# wrapper for giflib (or any language/environment where you can't
+  just free objects allocated in a foreign shared library.)
+
+* Minor fix for SF bug #56; BitsPerPixel may be left as uninitialized
+  value when reading (truncated) gif.
+
+* Applied SF patch #17: Use a fallback on Windows where mkstemp is not
+  available.
+
+* Applied SF patch #15: Code hardening, preventing spurious
+  defective-image messages.
+
+Retirements
+-----------
+
+* Removed gif2raw from utils. Its blithe assumption that the EGA16
+  palette is a reliable default is now about 20 years obsolete. Format
+  conversion is better done with convert(1) from the ImageMagick suite,
+  anyway.
 
 Version 5.0.6
 =============

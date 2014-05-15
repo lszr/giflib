@@ -420,9 +420,7 @@ DGifGetImageDesc(GifFileType *GifFile)
        (long)GifFile->Image.Height;
 
     /* Reset decompress algorithm parameters. */
-    (void)DGifSetupDecompress(GifFile);
-
-    return GIF_OK;
+    return DGifSetupDecompress(GifFile);
 }
 
 /******************************************************************************
@@ -612,7 +610,7 @@ int DGifSavedExtensionToGCB(GifFileType *GifFile,
  This routine should be called last, to close the GIF file.
 ******************************************************************************/
 int
-DGifCloseFile(GifFileType *GifFile)
+DGifCloseFile(GifFileType *GifFile, int *ErrorCode)
 {
     GifFilePrivateType *Private;
 
@@ -640,25 +638,25 @@ DGifCloseFile(GifFileType *GifFile)
 
     if (!IS_READABLE(Private)) {
         /* This file was NOT open for reading: */
-        GifFile->Error = D_GIF_ERR_NOT_READABLE;
+	if (ErrorCode != NULL)
+	    *ErrorCode = D_GIF_ERR_NOT_READABLE;
+	free((char *)GifFile->Private);
+	free(GifFile);
         return GIF_ERROR;
     }
 
     if (Private->File && (fclose(Private->File) != 0)) {
-        GifFile->Error = D_GIF_ERR_CLOSE_FAILED;
+	if (ErrorCode != NULL)
+	    *ErrorCode = D_GIF_ERR_CLOSE_FAILED;
+	free((char *)GifFile->Private);
+	free(GifFile);
         return GIF_ERROR;
     }
 
     free((char *)GifFile->Private);
-
-    /* 
-     * Without the #ifndef, we get spurious warnings because Coverity mistakenly
-     * thinks the GIF structure is freed on an error return. 
-     */
-#ifndef __COVERITY__
     free(GifFile);
-#endif /* __COVERITY__ */
-
+    if (ErrorCode != NULL)
+	*ErrorCode = D_GIF_SUCCEEDED;
     return GIF_OK;
 }
 
@@ -748,7 +746,9 @@ DGifSetupDecompress(GifFileType *GifFile)
     GifPrefixType *Prefix;
     GifFilePrivateType *Private = (GifFilePrivateType *)GifFile->Private;
 
-    READ(GifFile, &CodeSize, 1);    /* Read Code size from file. */
+    if (READ(GifFile, &CodeSize, 1) < 1) {    /* Read Code size from file. */
+	return GIF_ERROR;    /* Failed to read Code size. */
+    }
     BitsPerPixel = CodeSize;
 
     Private->Buf[0] = 0;    /* Input Buffer empty. */
@@ -834,19 +834,22 @@ DGifDecompressLine(GifFileType *GifFile, GifPixelType *Line, int LineLen)
                  * pixels on our stack. If we done, pop the stack in reverse
                  * (thats what stack is good for!) order to output.  */
                 if (Prefix[CrntCode] == NO_SUCH_CODE) {
+                    CrntPrefix = LastCode;
+
                     /* Only allowed if CrntCode is exactly the running code:
                      * In that case CrntCode = XXXCode, CrntCode or the
                      * prefix code is last code and the suffix char is
                      * exactly the prefix of last code! */
                     if (CrntCode == Private->RunningCode - 2) {
-                        CrntPrefix = LastCode;
                         Suffix[Private->RunningCode - 2] =
                            Stack[StackPtr++] = DGifGetPrefixChar(Prefix,
                                                                  LastCode,
                                                                  ClearCode);
                     } else {
-                        GifFile->Error = D_GIF_ERR_IMAGE_DEFECT;
-                        return GIF_ERROR;
+                        Suffix[Private->RunningCode - 2] =
+                           Stack[StackPtr++] = DGifGetPrefixChar(Prefix,
+                                                                 CrntCode,
+                                                                 ClearCode);
                     }
                 } else
                     CrntPrefix = CrntCode;
@@ -1020,14 +1023,6 @@ DGifBufferedInput(GifFileType *GifFile, GifByteType *Buf, GifByteType *NextByte)
         /* Needs to read the next buffer - this one is empty: */
         if (READ(GifFile, Buf, 1) != 1) {
             GifFile->Error = D_GIF_ERR_READ_FAILED;
-            return GIF_ERROR;
-        }
-        /* There shouldn't be any empty data blocks here as the LZW spec
-         * says the LZW termination code should come first.  Therefore we
-         * shouldn't be inside this routine at that point.
-         */
-        if (Buf[0] == 0) {
-            GifFile->Error = D_GIF_ERR_IMAGE_DEFECT;
             return GIF_ERROR;
         }
         /* There shouldn't be any empty data blocks here as the LZW spec
