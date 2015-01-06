@@ -1,9 +1,28 @@
 			GIFLIB NEWS
 
 Short summary of recent news:
-  Minor API change to assist library wrappers in dynamic languages.
-  The gif2raw utility has been removed.
-  Various minor fix patches for unusual edge cases.
+   Two fixes to prevent library misbehavior in rare failure conditions.
+   Minor fixes to gifsponge and getarg.c, affacting utilities only.
+
+Version 5.1.1
+=============
+
+Code Fixes
+----------
+
+* Numerous minor fixes in getarg.c. Affects only the utilities, not the
+  core library.
+
+* Fix SourceForge bug #59 DGifOpen can segfault if DGifGetScreenDesc fails.
+
+* SourceForge patch #20: In gifalloc, fix usage of realloc() in case of failure.
+
+* Fix SourceForge bug #61 Leak in gifsponge.
+
+Build Fixes
+----------
+
+* glibtoolize port fix for OS X.
 
 Version 5.1.0
 =============
@@ -128,7 +147,7 @@ The library is now completely re-entrant and thread-safe.
 * Library error handling no longer uses a static cell to store the last
   error code registered; that made the library thread-unsafe.  For functions 
   other than GIF file openers, the code is now put in an Error member of
-  the GifFileType structure.  The GifError() amd GifLastError() functions
+  the GifFileType structure.  The GifError() and GifLastError() functions
   that referenced that static cell are gone, and the GifErrorString()
   function introduced in the 4.2 release now takes an explicit error code
   argument.
