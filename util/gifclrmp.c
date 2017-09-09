@@ -72,6 +72,10 @@ int main(int argc, char **argv)
 	exit(EXIT_FAILURE);
     }
 
+    (void)fprintf( stderr, "GifNoisyPrint %d, SaveFlag %d, LoadFlag %d, TranslateFlag %d,\n\
+GammaFlag %d, Gamma %f, ImageNFlag %d, ImageN %d, HelpFlag %d, NumFiles %d\n\n", \
+    GifNoisyPrint, SaveFlag, LoadFlag, TranslateFlag, GammaFlag, Gamma, ImageNFlag, ImageN, HelpFlag, NumFiles );
+
     if (HelpFlag) {
 	(void)fprintf(stderr, VersionStr, GIFLIB_MAJOR, GIFLIB_MINOR);
 	GAPrintHowTo(CtrlStr);
@@ -84,6 +88,10 @@ int main(int argc, char **argv)
     /* Default action is to dump colormaps */
     if (!SaveFlag && !LoadFlag && !GammaFlag && !TranslateFlag)
 	SaveFlag = true;
+
+    (void)fprintf( stderr, "GifNoisyPrint %d, SaveFlag %d, LoadFlag %d, TranslateFlag %d,\n\
+GammaFlag %d, Gamma %f, ImageNFlag %d, ImageN %d, HelpFlag %d, NumFiles %d\n\n", \
+    GifNoisyPrint, SaveFlag, LoadFlag, TranslateFlag, GammaFlag, Gamma, ImageNFlag, ImageN, HelpFlag, NumFiles );
 
     if (NumFiles == 1) {
 	if ((GifFileIn = DGifOpenFileName(*FileName, &ErrorCode)) == NULL) {
